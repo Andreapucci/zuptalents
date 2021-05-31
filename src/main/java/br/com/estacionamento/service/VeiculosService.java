@@ -17,10 +17,12 @@ import br.com.estacionamento.controllers.request.VeiculosDTO;
 
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.estacionamento.model.Veiculos;
 import br.com.estacionamento.repository.VeiculosRepository;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.*;
 
@@ -70,7 +72,7 @@ public class VeiculosService {
 			resultado = saveVeiculos(veiculos, clienteVeiculo.getId());
 
 		} else {
-			throw new ServiceException("Não foi possivel finalizar o cadastro!! ");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Não foi possivel finalizar o cadastro!! ");
 		}
 
 		return resultado;
@@ -88,7 +90,7 @@ public class VeiculosService {
 			}
 		}
 		if(codigoMarca.isBlank()){
-			throw new ServiceException("Essa marca não foi encontrado na Tabela FIPE");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Essa marca não foi encontrado na Tabela FIPE");
 		}
 
 
@@ -99,7 +101,7 @@ public class VeiculosService {
 			}
 		}
 		if(codigoModelo.isBlank()){
-			throw new ServiceException("Esse modelo não foi encontrado na Tabela FIPE");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Esse modelo não foi encontrado na Tabela FIPE");
 		}
 
 		AnosFipeDto anos = fipeService.getAnoFipe(codigoMarca, codigoModelo);
@@ -109,14 +111,14 @@ public class VeiculosService {
 			}
 		}
 		if(codigoAno.isBlank()){
-			throw new ServiceException("Esse Ano não foi encontrado na Tabela FIPE");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Esse ano não foi encontrado na tabela FIPE");
 		}
 
 		ValorFipeDto valorFipe = fipeService.getValorFipe(codigoMarca,codigoModelo,codigoAno);
 		if(!valorFipe.getValor().isBlank()){
 			veiculos.setValorFipe(valorFipe.getValor());
 		}else{
-			throw new ServiceException("Dados incorretos");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Verifique os dados cadastrados");
 		}
 
 		return true;
@@ -150,7 +152,7 @@ public class VeiculosService {
 
 	private Veiculos saveVeiculos(VeiculosDTO veiculos, Long clienteid) {
 		Veiculos veiculoNovo = new Veiculos();
-
+	try{
 		veiculoNovo.setMarca(veiculos.getMarca());
 		veiculoNovo.setModelo(veiculos.getModelo());
 		veiculoNovo.setAno(veiculos.getAno());
@@ -158,7 +160,9 @@ public class VeiculosService {
 		veiculoNovo.setValor(veiculos.getValorFipe());
 
 		return veiculoRepository.saveAndFlush(veiculoNovo);
-
+	 }catch (Exception e){
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cadastro incorreto");
+	 }
 	}
 
 	private Boolean rodizioDia(String ano) {

@@ -1,12 +1,8 @@
 package br.com.estacionamento.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import br.com.estacionamento.model.Veiculos;
 import br.com.estacionamento.service.VeiculosService;
@@ -21,11 +17,15 @@ public class VeiculosControle {
     private VeiculosService veiculoService;
     
     @GetMapping(value = "/buscaVeiculosPorCpf")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public UsuarioDTO buscaVeiculosPorCpf(@RequestParam String cpf) {
         return veiculoService.buscaVeiculosPorCpf(cpf);
     }
 
     @PostMapping(value = "/incluirVeiculos")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     public Veiculos incluirVeiculos(@RequestBody VeiculosDTO veiculos) {
         return veiculoService.incluirVeiculos(veiculos);
     }

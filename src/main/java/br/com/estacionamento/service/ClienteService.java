@@ -4,7 +4,9 @@ import br.com.estacionamento.model.Cliente;
 import br.com.estacionamento.controllers.request.ClienteDTO;
 import br.com.estacionamento.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.*;
 
@@ -47,13 +49,17 @@ public class ClienteService {
     private Cliente saveCliente(ClienteDTO clientes) {
 
         Cliente clienteNovo = new Cliente();
-
+    try{
         clienteNovo.setCpf(clientes.getCpf());
         clienteNovo.setNome(clientes.getNome());
         clienteNovo.setEmail(clientes.getEmail());
         clienteNovo.setDataNascimento(clientes.getDataNascimento());
 
         return clienteRepository.saveAndFlush(clienteNovo);
+
+    }catch (Exception e){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cadastro incorreto");
+    }
 
     }
 }

@@ -1,10 +1,8 @@
 package br.com.estacionamento.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import br.com.estacionamento.model.Cliente;
 import br.com.estacionamento.service.ClienteService;
@@ -18,6 +16,8 @@ public class ClienteControle {
 
 
     @PostMapping(value = "/incluirCliente")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     public Cliente incluirCliente(@RequestBody ClienteDTO cliente) {
         return clienteService.incluirClientes(cliente);
 

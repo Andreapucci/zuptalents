@@ -10,14 +10,7 @@ import br.com.estacionamento.model.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-	
-	public Cliente findById(long id);
-	
-	public List<Cliente> findByNome(String nome);
-	
+
 	public Cliente findByCpf(String cpf);
-	
-	//public List<Cliente> findByStatus(Boolean status);
-	
 
 }
